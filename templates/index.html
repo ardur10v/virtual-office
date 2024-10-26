@@ -1,0 +1,45 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Session Example</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Session Management</h1>
+    <button id="createSession">Create Session</button>
+    <input type="text" id="sessionId" placeholder="Enter Session ID">
+    <button id="joinSession">Join Session</button>
+
+    <script>
+        const socket = io();
+
+        document.getElementById('createSession').onclick = () => {
+            socket.emit('create_session');
+        };
+
+        socket.on('session_created', (data) => {
+            alert(`Session created with ID: ${data.session_id}`);
+        });
+
+        document.getElementById('joinSession').onclick = () => {
+            const sessionId = document.getElementById('sessionId').value;
+            socket.emit('join_session', { session_id: sessionId });
+        };
+
+        socket.on('joined_session', (data) => {
+            alert(`Joined session: ${data.session_id}`);
+        });
+
+        socket.on('user_joined', (data) => {
+            console.log(`User joined: ${data.user_id}`);
+        });
+
+        socket.on('user_left', (data) => {
+            console.log(`User left: ${data.user_id}`);
+        });
+        
+    </script>
+</body>
+</html>
